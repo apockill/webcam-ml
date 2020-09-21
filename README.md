@@ -1,5 +1,6 @@
 # webcam-ml
 
+![Example](./docs/zoom-screenshot.png)
 
 # Dependencies
 ```
