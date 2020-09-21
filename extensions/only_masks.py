@@ -19,6 +19,9 @@ def process(frame: np.ndarray, results: Iterable[DetectionNode]):
         for result in results
     ]
 
+    if not len(contours):
+        return green_screen
+
     # Only show the largest object on the screen
     largest_contour = max(contours, key=cv2.contourArea)
     mask: np.ndarray = black_frame.copy()
