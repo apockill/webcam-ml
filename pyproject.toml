@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "webcam-ml"
+version = "0.1.0"
+description = "Create a fake webcam using vision capsules to do operations on the video"
+authors = ["Alex <alex.thiel@aotu.ai>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.6"
+vcap = "^0.2.3"
+vcap_utils = "^0.2.3"
+pyfakewebcam = "^0.1.0"
+opencv-python = "^4.4.0"
+
+[tool.poetry.dev-dependencies]
+
+[[tool.poetry.source]]
+name = "openvino-builds"
+url = "https://masamitsu-murase.github.io/openvino-python/simple/"
+
+[build-system]
+requires = ["poetry-core>=1.0.0a5"]
+build-backend = "poetry.core.masonry.api"

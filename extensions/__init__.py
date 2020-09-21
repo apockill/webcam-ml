@@ -1,0 +1,1 @@
+from .only_masks import process as extension
