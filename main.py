@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
 from queue import Queue
 from pathlib import Path
-import time
 from typing import Optional
 
 import cv2
@@ -72,7 +71,6 @@ def main(input_device: str, output_device: str, capsules_dir: Path):
 
             rgb_display_frame = cv2.cvtColor(display_frame, cv2.COLOR_BGR2RGB)
             env.camera.schedule_frame(rgb_display_frame)
-            time.sleep(1 / 30.0)
 
 
 if __name__ == "__main__":
