@@ -15,9 +15,7 @@ sudo apt-get install v4l2loopback-utils
 Install dependencies, then before running run the following command
 with the desired fake webcam device:
 ```
-modprobe v4l2loopback devices=1
-
-sudo modprobe v4l2loopback video_nr=1 card_label="Fake Webcam"
+sudo modprobe v4l2loopback video_nr=1 card_label="ML Webcam"
 ```
 
 ## Debugging

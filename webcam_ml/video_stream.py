@@ -15,9 +15,14 @@ class Capture:
     """
 
     def __init__(self, device: str,
-                 frame_callbacks: List[CALLBACK_TYPE]):
+                 frame_callbacks: List[CALLBACK_TYPE],
+                 try_resolution: Tuple[int, int]):
         self.cap = cv2.VideoCapture(device)
+
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, try_resolution[0])
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, try_resolution[1])
         self.callbacks = list(frame_callbacks)
+
         self._running = True
         self._thread = Thread(target=self._run, daemon=True)
         self._thread.start()
