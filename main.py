@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from queue import Queue
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import cv2
 import numpy as np
@@ -15,7 +15,12 @@ class Environment:
     """A context manager for all of the services used by the script,
     to ensure everything is closed if an error occurs"""
 
-    def __init__(self, input_device, output_device, capsules_dir, frame_queue):
+    def __init__(self,
+                 input_device,
+                 output_device,
+                 capsules_dir,
+                 frame_queue,
+                 desired_resolution):
         self.runtime: Optional[CapsuleRuntime] = None
         self.output_fakecam: Optional[pyfakewebcam.FakeWebcam] = None
         self.input_capture: Optional[Capture] = None
@@ -25,11 +30,15 @@ class Environment:
         self._output_device = output_device
         self._capsules_dir = capsules_dir
         self._frame_queue = frame_queue
+        self._desired_resolution = desired_resolution
 
     def __enter__(self, *args, **kwargs):
         # Create the input camera
         print("Starting camera")
-        self.input_camera = Capture(self._input_device, [self._frame_queue.put])
+        self.input_camera = Capture(
+            device=self._input_device,
+            frame_callbacks=[self._frame_queue.put],
+            try_resolution=self._desired_resolution)
 
         # Create the capsule runtime
         print("Starting runtime")
@@ -54,11 +63,15 @@ class Environment:
         self.camera = None
 
 
-def main(input_device: str, output_device: str, capsules_dir: Path):
+def main(input_device: str,
+         output_device: str,
+         capsules_dir: Path,
+         desired_resolution: Tuple[int, int]):
     frame_queue = Queue(maxsize=1)
     frame: np.ndarray
 
-    env = Environment(input_device, output_device, capsules_dir, frame_queue)
+    env = Environment(input_device, output_device, capsules_dir, frame_queue,
+                      desired_resolution)
 
     with env:
         print("Starting")
@@ -82,10 +95,13 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--output-device", type=str, required=True,
                         help="For example, '/dev/video2/'")
     parser.add_argument("-c", "--capsules-dir", type=Path, required=True)
+    parser.add_argument("-r", "--try-resolution", type=int, nargs=2,
+                        default=(1920, 1080), help="e.g. (width, height)")
     args = parser.parse_args()
 
     main(
         input_device=args.input_device,
         output_device=args.output_device,
-        capsules_dir=args.capsules_dir
+        capsules_dir=args.capsules_dir,
+        desired_resolution=args.try_resolution
     )
